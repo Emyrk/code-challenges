@@ -15,27 +15,30 @@ func main() {
 	for _, l := range lines {
 		dir := l[0]
 		mag := must(strconv.Atoi(l[1:]))
-		switch dir {
-		case 'L':
-			current -= mag
-		case 'R':
-			current += mag
+		for i := 0; i < mag; i++ {
+			current = rotate(current, dir == 'R')
+			if current == 0 {
+				totalZeroes++
+			}
 		}
-
-		if current < 0 {
-			current = 100 - ((current * -1) % 100)
-		}
-		if current >= 100 {
-			current = current % 100
-		}
-
-		if current == 0 {
-			totalZeroes++
-		}
-
-		fmt.Println(current)
 	}
 	fmt.Println("Total zeroes:", totalZeroes)
+}
+
+func rotate(current int, dir bool) int {
+	if dir {
+		current++
+	} else {
+		current--
+	}
+
+	if current == -1 {
+		return 99
+	}
+	if current == 100 {
+		return 0
+	}
+	return current
 }
 
 func must[V any](value V, err error) V {
@@ -43,4 +46,11 @@ func must[V any](value V, err error) V {
 		panic(err)
 	}
 	return value
+}
+
+func abs(n int) int {
+	if n < 0 {
+		return -n
+	}
+	return n
 }
